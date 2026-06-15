@@ -1,0 +1,25 @@
+Gamehome: Můj herní katalog
+​Projekt Gamehome jsem dal dohromady jako webovou databázi, kde si můžu (a nejen já) procházet hry, koukat na jejich detaily a hlavně psát recenze. Celé je to postavené tak, aby měl každý uživatel přehled, a admini měli snadnou práci se správou obsahu.  
+​Jak jsem to stavěl (Technologie)
+​Při vývoji jsem se držel osvědčeného MVC modelu, aby byl kód přehledný:  
+​Backend: Běží to na Node.js a Expressu.  
+​Data: Všechno ukládám do MongoDB, ke kterému se připojuji přes Mongoose.  
+​Frontend: Použil jsem jednoduché EJS šablony.  
+​Zabezpečení: Hesla řeším přes bcryptjs a session hlídám pomocí express-session.  
+​Media: Aby se daly k hrám nahrávat obálky, použil jsem multer.  
+​2. část (Instalace, struktura a práva)
+​Jak to zprovoznit na tvém stroji
+​Pokud si to chceš zkusit spustit, budeš potřebovat Node.js (ideálně verzi 18+) a běžící instanci MongoDB.  
+​Nejdřív si projekt stáhni: git clone [https://github.com/TVOJE_UZIVATELSKE_JMENO/gamehome.git](https://github.com/TVOJE_UZIVATELSKE_JMENO/gamehome.git) a cd gamehome.  
+​Nainstaluj knihovny: npm install.  
+​Vytvoř v kořenu .env soubor: MONGO_URI=mongodb://localhost:27017/gamehome, SESSION_SECRET=nejaky_tajny_klic, PORT=3000.  
+​Vytvoř složku pro fotky: mkdir -p public/uploads.  
+​Startuj: npm run dev (vývoj) nebo npm start (produkce). Adresa: http://localhost:3000.  
+​Struktura projektu
+​gamehome/ obsahuje: app.js (start), config/ (multer), models/ (User, Game), controllers/ (logika), routes/ (cesty), middlewares/ (kontroly), views/ (EJS), public/ (CSS, fotky).  
+​Kdo co může?
+​Návštěvník: Prohlížení a hledání her.  
+​Registrovaný uživatel: Vše výše + psaní recenzí.  
+​Admin: Správa her (CRUD) a nahrávání obálek.  
+​Tip pro admina
+​Po první registraci si musíš ručně nastavit roli v databázi: db.users.updateOne({ email: "tvuj@email.cz" }, { $set: { role: "admin" } }).
