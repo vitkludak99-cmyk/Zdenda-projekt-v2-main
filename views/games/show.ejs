@@ -1,0 +1,148 @@
+<%- include('../partials/header') %>
+
+<!-- ==========================================
+     DETAIL HRY (OBÁLKA A ZÁKLADNÍ INFO)
+=========================================== -->
+<div class="game-detail">
+  
+  <!-- Levý sloupec: Obal a hodnocení -->
+  <div class="game-detail-cover">
+    <img 
+      src="/uploads/<%= game.coverImage %>" 
+      alt="<%= game.title %>"
+      onerror="this.src='/css/no-cover.svg'"
+    >
+    
+    <% if (game.avgRating) { %>
+      <div class="big-rating">
+        <%= game.avgRating %><span>/10</span>
+      </div>
+      <p class="review-count">
+        <%= game.reviews.length %> recenzí
+      </p>
+    <% } else { %>
+      <p class="no-rating">
+        Zatím bez hodnocení
+      </p>
+    <% } %>
+  </div>
+
+  <!-- Pravý sloupec: Informace o hře -->
+  <div class="game-detail-info">
+    <h1><%= game.title %></h1>
+    
+    <div class="meta-row">
+      <span class="tag tag-genre"><%= game.genre %></span>
+      <span class="meta-item">📅 <%= game.releaseYear %></span>
+      <span class="meta-item">🏢 <%= game.developer %></span>
+    </div>
+    
+    <div class="platforms">
+      <% game.platform.forEach(p => { %>
+        <span class="tag"><%= p %></span>
+      <% }) %>
+    </div>
+    
+    <p class="game-description">
+      <%= game.description %>
+    </p>
+
+    <!-- Akce pro administrátora -->
+    <% if (user && user.role === 'admin') { %>
+      <div class="admin-actions">
+        <a href="/games/<%= game._id %>/edit" class="btn btn-secondary">
+          ✏️ Upravit
+        </a>
+        
+        <form 
+          action="/games/<%= game._id %>/delete" 
+          method="POST" 
+          style="display: inline;"
+          onsubmit="return confirm('Opravdu smazat tuto hru?')"
+        >
+          <button type="submit" class="btn btn-danger">
+            🗑 Smazat
+          </button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- ==========================================
+     SEKCE RECENZÍ
+=========================================== -->
+<section class="reviews-section">
+  <h2>Recenze</h2>
+
+  <!-- Formulář pro přidání recenze -->
+  <% if (user && !userReview) { %>
+    <div class="review-form-box">
+      <h3>Přidat recenzi</h3>
+      
+      <form action="/games/<%= game._id %>/review" method="POST">
+        <div class="form-group">
+          <label>Hodnocení (1–10)</label>
+          <input type="number" name="rating" min="1" max="10" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Text recenze (volitelné)</label>
+          <textarea 
+            name="text" 
+            rows="4" 
+            maxlength="1000" 
+            placeholder="Napiš svůj názor..."
+          ></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+          Odeslat recenzi
+        </button>
+      </form>
+    </div>
+
+  <!-- Výzva k přihlášení pro neregistrované -->
+  <% } else if (!user) { %>
+    <p class="login-prompt">
+      <a href="/login">Přihlaš se</a> a přidej recenzi.
+    </p>
+  <% } %>
+
+  <!-- Hláška při prázdném seznamu recenzí -->
+  <% if (!game.reviews.length) { %>
+    <p class="empty-reviews">
+      Zatím žádné recenze. Buď první!
+    </p>
+  <% } %>
+
+  <!-- Výpis existujících recenzí -->
+  <div class="reviews-list">
+    <% game.reviews.forEach(r => { %>
+      <div class="review-card">
+        
+        <div class="review-header">
+          <strong>👤 <%= r.user ? r.user.username : 'Smazaný uživatel' %></strong>
+          <span class="review-rating"><%= r.rating %>/10</span>
+          <small><%= r.createdAt.toLocaleDateString('cs-CZ') %></small>
+        </div>
+        
+        <% if (r.text) { %>
+          <p><%= r.text %></p>
+        <% } %>
+
+        <!-- Tlačítko pro smazání (Admin nebo Autor recenze) -->
+        <% if (user && (user.role === 'admin' || (r.user && r.user._id.toString() === user._id.toString()))) { %>
+          <form action="/games/<%= game._id %>/review/<%= r._id %>/delete" method="POST">
+            <button class="btn btn-sm btn-danger">
+              Smazat
+            </button>
+          </form>
+        <% } %>
+        
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

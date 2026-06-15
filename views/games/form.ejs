@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+
+<div class="form-page">
+  <h1><%= game ? '✏️ Upravit hru' : '+ Přidat novou hru' %></h1>
+
+  <form action="<%= game ? '/games/' + game._id + '/edit' : '/games' %>" method="POST"
+        enctype="multipart/form-data" class="game-form">
+
+    <div class="form-group">
+      <label>Název hry *</label>
+      <input type="text" name="title" required value="<%= game ? game.title : '' %>" placeholder="např. The Witcher 3">
+    </div>
+
+    <div class="form-group">
+      <label>Popis *</label>
+      <textarea name="description" required rows="5" placeholder="Stručný popis hry..."><%= game ? game.description : '' %></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Žánr *</label>
+        <select name="genre" required>
+          <% ['Akční','RPG','Strategie','Sportovní','Horor','Simulátor','Plošinová','Puzzle','Jiné'].forEach(g => { %>
+            <option value="<%= g %>" <%= game && game.genre === g ? 'selected' : '' %>><%= g %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Vývojář *</label>
+        <input type="text" name="developer" required value="<%= game ? game.developer : '' %>" placeholder="CD Projekt Red">
+      </div>
+      <div class="form-group">
+        <label>Rok vydání *</label>
+        <input type="number" name="releaseYear" required min="1970" max="2030"
+               value="<%= game ? game.releaseYear : new Date().getFullYear() %>">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Platformy</label>
+      <div class="checkbox-group">
+        <% ['PC','PlayStation','Xbox','Nintendo Switch','Mobilní'].forEach(p => { %>
+          <label class="checkbox-label">
+            <input type="checkbox" name="platform" value="<%= p %>"
+              <%= game && game.platform.includes(p) ? 'checked' : '' %>>
+            <%= p %>
+          </label>
+        <% }) %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Obrázek obálky</label>
+      <% if (game && game.coverImage !== 'default-cover.png') { %>
+        <img src="/uploads/<%= game.coverImage %>" alt="cover" class="preview-img">
+      <% } %>
+      <input type="file" name="coverImage" accept="image/jpeg,image/png,image/webp">
+      <small>Max. 5 MB, formáty: jpg, png, webp</small>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary"><%= game ? 'Uložit změny' : 'Přidat hru' %></button>
+      <a href="/games" class="btn btn-ghost">Zrušit</a>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

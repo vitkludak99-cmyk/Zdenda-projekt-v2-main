@@ -1,0 +1,66 @@
+<%- include('../partials/header') %>
+
+<h1>⚙️ Admin panel</h1>
+
+<div class="admin-grid">
+  <section class="admin-section">
+    <h2>👥 Uživatelé (<%= users.length %>)</h2>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Jméno</th><th>Email</th><th>Role</th><th>Akce</th></tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+        <tr class="<%= u.role === 'admin' ? 'admin-row' : '' %>">
+          <td><%= u.username %></td>
+          <td><%= u.email %></td>
+          <td><span class="tag <%= u.role === 'admin' ? 'tag-admin' : '' %>"><%= u.role %></span></td>
+          <td>
+            <% if (u._id.toString() !== user._id.toString()) { %>
+              <form action="/admin/users/<%= u._id %>/role" method="POST" style="display:inline">
+                <button class="btn btn-sm btn-secondary">
+                  <%= u.role === 'admin' ? '↓ Odebrat admin' : '↑ Přidat admin' %>
+                </button>
+              </form>
+              <form action="/admin/users/<%= u._id %>/delete" method="POST" style="display:inline"
+                    onsubmit="return confirm('Smazat uživatele?')">
+                <button class="btn btn-sm btn-danger">Smazat</button>
+              </form>
+            <% } else { %>
+              <span class="muted">To jsi ty</span>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="admin-section">
+    <h2>🎮 Hry (<%= games.length %>)</h2>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Název</th><th>Žánr</th><th>Rok</th><th>Recenzí</th><th>Akce</th></tr>
+      </thead>
+      <tbody>
+        <% games.forEach(g => { %>
+        <tr>
+          <td><a href="/games/<%= g._id %>"><%= g.title %></a></td>
+          <td><%= g.genre %></td>
+          <td><%= g.releaseYear %></td>
+          <td><%= g.reviews.length %></td>
+          <td>
+            <a href="/games/<%= g._id %>/edit" class="btn btn-sm btn-secondary">Upravit</a>
+            <form action="/games/<%= g._id %>/delete" method="POST" style="display:inline"
+                  onsubmit="return confirm('Smazat hru?')">
+              <button class="btn btn-sm btn-danger">Smazat</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

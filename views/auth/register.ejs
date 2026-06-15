@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+
+<!-- ==========================================
+     REGISTRAČNÍ FORMULÁŘ
+=========================================== -->
+<div class="auth-box">
+  <h1>Registrace</h1>
+  
+  <form action="/register" method="POST">
+    
+    <!-- Uživatelské jméno -->
+    <div class="form-group">
+      <label>Uživatelské jméno</label>
+      <input 
+        type="text" 
+        name="username" 
+        placeholder="jmeno123" 
+        required
+      >
+    </div>
+    
+    <!-- E-mail -->
+    <div class="form-group">
+      <label>E-mail</label>
+      <input 
+        type="email" 
+        name="email" 
+        placeholder="email@example.com" 
+        required
+      >
+    </div>
+    
+    <!-- Heslo -->
+    <div class="form-group">
+      <label>Heslo</label>
+      <input 
+        type="password" 
+        name="password" 
+        placeholder="min. 6 znaků" 
+        required
+      >
+    </div>
+    
+    <!-- Potvrzení hesla -->
+    <div class="form-group">
+      <label>Heslo znovu</label>
+      <input 
+        type="password" 
+        name="password2" 
+        required
+      >
+    </div>
+    
+    <!-- Odesílací tlačítko -->
+    <button type="submit" class="btn btn-primary">
+      Zaregistrovat se
+    </button>
+    
+  </form>
+  
+  <!-- Odkaz na přihlášení -->
+  <p>
+    Máš účet? <a href="/login">Přihlaš se</a>
+  </p>
+</div>
+
+<%- include('../partials/footer') %>

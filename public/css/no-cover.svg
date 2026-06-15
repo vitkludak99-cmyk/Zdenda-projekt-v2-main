@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400">
+  <rect width="300" height="400" fill="#1a1d2e"/>
+  <text x="150" y="190" font-family="sans-serif" font-size="60" fill="#2e3150" text-anchor="middle">🎮</text>
+  <text x="150" y="240" font-family="sans-serif" font-size="16" fill="#444466" text-anchor="middle">Bez obálky</text>
+</svg>

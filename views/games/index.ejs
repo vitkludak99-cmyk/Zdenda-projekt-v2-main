@@ -1,0 +1,131 @@
+<%- include('../partials/header') %>
+
+<!-- ==========================================
+     HLAVIČKA STRÁNKY A AKCE
+=========================================== -->
+<div class="page-header">
+  <h1>🎮 Databáze her</h1>
+  
+  <% if (user && user.role === 'admin') { %>
+    <a href="/games/new" class="btn btn-primary">
+      + Přidat hru
+    </a>
+  <% } %>
+</div>
+
+<!-- ==========================================
+     VYHLEDÁVÁNÍ A FILTRY
+=========================================== -->
+<form class="search-bar" action="/games" method="GET">
+  
+  <!-- Textové vyhledávání -->
+  <input 
+    type="text" 
+    name="q" 
+    placeholder="Hledat hru..." 
+    value="<%= q || '' %>"
+  >
+  
+  <!-- Filtr podle žánru -->
+  <select name="genre">
+    <option value="">Všechny žánry</option>
+    <% 
+      const genres = ['Akční', 'RPG', 'Strategie', 'Sportovní', 'Horor', 'Simulátor', 'Plošinová', 'Puzzle', 'Jiné'];
+      genres.forEach(g => { 
+    %>
+      <option value="<%= g %>" <%= genre === g ? 'selected' : '' %>>
+        <%= g %>
+      </option>
+    <% }) %>
+  </select>
+  
+  <!-- Filtr podle platformy -->
+  <select name="platform">
+    <option value="">Všechny platformy</option>
+    <% 
+      const platforms = ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobilní'];
+      platforms.forEach(p => { 
+    %>
+      <option value="<%= p %>" <%= platform === p ? 'selected' : '' %>>
+        <%= p %>
+      </option>
+    <% }) %>
+  </select>
+  
+  <!-- Tlačítka -->
+  <button type="submit" class="btn btn-secondary">
+    Hledat
+  </button>
+  
+  <a href="/games" class="btn btn-ghost">
+    Resetovat
+  </a>
+</form>
+
+<!-- ==========================================
+     VÝPIS HER (GRID)
+=========================================== -->
+<% if (!games.length) { %>
+  
+  <!-- Prázdný stav (žádné hry) -->
+  <div class="empty-state">
+    <p>😔 Žádné hry nenalezeny.</p>
+    
+    <% if (user && user.role === 'admin') { %>
+      <a href="/games/new" class="btn btn-primary">
+        Přidej první hru
+      </a>
+    <% } %>
+  </div>
+
+<% } else { %>
+
+  <!-- Seznam nalezených her -->
+  <div class="games-grid">
+    <% games.forEach(game => { %>
+      
+      <a href="/games/<%= game._id %>" class="game-card">
+        
+        <!-- Obal hry a hodnocení -->
+        <div class="game-cover">
+          <img 
+            src="/uploads/<%= game.coverImage %>" 
+            alt="<%= game.title %>"
+            onerror="this.src='/css/no-cover.svg'"
+          >
+          
+          <% if (game.avgRating) { %>
+            <span class="rating-badge">
+              <%= game.avgRating %>
+            </span>
+          <% } %>
+        </div>
+        
+        <!-- Informace o hře -->
+        <div class="game-info">
+          <h3><%= game.title %></h3>
+          
+          <p class="game-meta">
+            <%= game.genre %> · <%= game.releaseYear %>
+          </p>
+          
+          <p class="game-dev">
+            <%= game.developer %>
+          </p>
+          
+          <!-- Štítky platforem -->
+          <div class="platforms">
+            <% game.platform.forEach(p => { %>
+              <span class="tag"><%= p %></span>
+            <% }) %>
+          </div>
+        </div>
+        
+      </a>
+      
+    <% }) %>
+  </div>
+
+<% } %>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gamehome</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       HLAVNÍ NAVIGACE
+  =========================================== -->
+  <nav class="navbar">
+    <a href="/games" class="nav-logo">🎮 GameDB</a>
+    
+    <div class="nav-links">
+      <a href="/games">Hry</a>
+      
+      <% if (user) { %>
+        
+        <!-- Nabídka pro admina -->
+        <% if (user.role === 'admin') { %>
+          <a href="/games/new">+ Přidat hru</a>
+          <a href="/admin">Admin</a>
+        <% } %>
+        
+        <!-- Uživatelský profil a odhlášení -->
+        <span class="nav-user">👤 <%= user.username %></span>
+        <a href="/logout">Odhlásit</a>
+        
+      <% } else { %>
+        
+        <!-- Nabídka pro hosty -->
+        <a href="/login">Přihlásit</a>
+        <a href="/register" class="btn-primary">Registrovat</a>
+        
+      <% } %>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       HLAVNÍ OBSAH A ZPRÁVY (FLASH MESSAGES)
+  =========================================== -->
+  <main class="container">
+    
+    <!-- Systémová upozornění -->
+    <% if (success && success.length) { %>
+      <div class="alert alert-success">
+        <%= success %>
+      </div>
+    <% } %>
+
+    <% if (error && error.length) { %>
+      <div class="alert alert-error">
+        <%= error %>
+      </div>
+    <% } %>
